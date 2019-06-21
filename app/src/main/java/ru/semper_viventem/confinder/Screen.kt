@@ -14,15 +14,14 @@ abstract class Screen : Fragment() {
         return inflater.inflate(layoutId, container)
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    final override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         initView(view)
     }
 
     abstract fun initView(view: View)
 
-    protected fun sendNavigationMessage(message: NavigatinMessage) {
+    protected fun sendNavigationMessage(message: NavigationMessage) {
         (activity as? NavigationRouter)?.handleMessage(message)
             ?: throw IllegalStateException("Your activity can't handle navigation message")
     }

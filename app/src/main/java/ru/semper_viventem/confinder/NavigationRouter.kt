@@ -2,5 +2,5 @@ package ru.semper_viventem.confinder
 
 interface NavigationRouter {
 
-    fun handleMessage(message: NavigatinMessage)
+    fun handleMessage(message: NavigationMessage)
 }
