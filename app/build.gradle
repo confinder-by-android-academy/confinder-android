@@ -16,6 +16,7 @@ android {
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
+        buildConfigField('String', 'API_URL', '"https://confinder.tech/"')
         buildConfigField('String', 'GOOGLE_AUTH_KEY', '"1057163609315-uk0s1ovune5bfifof7m1ij07u3qik6co.apps.googleusercontent.com"')
     }
 
@@ -74,6 +75,10 @@ dependencies {
     implementation 'com.google.firebase:firebase-core:17.0.0'
     implementation 'com.google.android.gms:play-services-auth:17.0.0'
 
+    // Web
+    implementation 'com.squareup.retrofit2:retrofit:2.5.0'
+    implementation 'com.google.code.gson:gson:2.8.5'
+    implementation 'com.squareup.retrofit2:converter-gson:2.5.0'
 }
 
 apply plugin: 'com.google.gms.google-services'
