@@ -11,10 +11,10 @@ import com.google.android.gms.common.api.ApiException
 import kotlinx.android.synthetic.main.screen_auth.*
 import ru.semper_viventem.confinder.BuildConfig
 import ru.semper_viventem.confinder.R
-import ru.semper_viventem.confinder.ui.Screen
+import ru.semper_viventem.confinder.ui.XmlScreen
 import ru.semper_viventem.confinder.ui.visible
 
-class AuthScreen : Screen() {
+class AuthScreen : XmlScreen() {
 
     companion object {
         private const val RC_SIGN_IN = 900

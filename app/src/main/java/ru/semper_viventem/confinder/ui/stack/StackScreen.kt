@@ -7,10 +7,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.cardview.widget.CardView
 import androidx.core.view.setMargins
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import ru.semper_viventem.confinder.dp
-import ru.semper_viventem.confinder.ui.Screen
 import swipeable.com.layoutmanager.OnItemSwiped
 import swipeable.com.layoutmanager.SwipeableLayoutManager
 import swipeable.com.layoutmanager.SwipeableTouchHelperCallback
@@ -18,10 +18,7 @@ import swipeable.com.layoutmanager.touchelper.ItemTouchHelper
 import java.util.*
 
 
-class StackScreen : Screen() {
-
-    override val layoutId: Int
-        get() = throw UnsupportedOperationException("no_face.jpg")
+class StackScreen : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
         RecyclerView(requireActivity()).also {
@@ -39,10 +36,6 @@ class StackScreen : Screen() {
                 override fun onItemSwipedLeft() = Unit
             })).attachToRecyclerView(it)
         }
-
-    override fun initView(view: View) {
-        // Fuck. I don't want to cast `view` to `RecyclerView`, let init be in `onCreateView`.
-    }
 
     private class CardHolder(cardView: CardView) : RecyclerView.ViewHolder(cardView) {
         init {
