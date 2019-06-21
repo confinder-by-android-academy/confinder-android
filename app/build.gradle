@@ -15,6 +15,8 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField('String', 'GOOGLE_AUTH_KEY', '"1057163609315-uk0s1ovune5bfifof7m1ij07u3qik6co.apps.googleusercontent.com"')
     }
 
     buildTypes {
@@ -68,6 +70,8 @@ dependencies {
     // Firebase
     implementation 'com.google.firebase:firebase-core:17.0.0'
     implementation 'com.google.firebase:firebase-auth:18.0.0'
+    implementation 'com.google.android.gms:play-services-auth:17.0.0'
+
 }
 
 apply plugin: 'com.google.gms.google-services'

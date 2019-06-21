@@ -18,4 +18,12 @@
         android:textColor="?android:textColorPrimary"
         app:icon="@drawable/ic_google"/>
 
+    <ProgressBar
+        android:id="@+id/progress"
+        android:elevation="8dp"
+        android:visibility="gone"
+        android:layout_gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
 </FrameLayout>
