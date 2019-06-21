@@ -1,4 +1,4 @@
-package ru.semper_viventem.confinder
+package ru.semper_viventem.confinder.ui
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -11,7 +11,7 @@ abstract class Screen : Fragment() {
     abstract val layoutId: Int
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(layoutId, container)
+        return inflater.inflate(layoutId, container, false)
     }
 
     final override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
