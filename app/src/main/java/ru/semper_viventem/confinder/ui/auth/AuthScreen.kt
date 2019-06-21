@@ -49,7 +49,8 @@ class AuthScreen : XmlScreen() {
                 authCode?.let { handleAuthCode(it) }
             } catch (e: ApiException) {
                 showProgress(false)
-                Toast.makeText(context, getString(R.string.auth_failure_message), Toast.LENGTH_LONG).show()
+                Toast.makeText(context, getString(R.string.auth_failure_message), Toast.LENGTH_LONG)
+                    .show()
                 Log.e(TAG, e.toString())
             }
         }
@@ -66,12 +67,15 @@ class AuthScreen : XmlScreen() {
 
         AuthGateway.logInWithToken(
             token = authCode,
-            onSuccess = {
+            onSuccess = { profile ->
                 showProgress(false)
+                Log.d(TAG, profile.toString())
                 sendNavigationMessage(NavigationMessage.OpenProfileDataScreen)
             },
             onError = { e ->
                 Log.e(TAG, e.toString())
+                Toast.makeText(context, getString(R.string.auth_failure_message), Toast.LENGTH_LONG)
+                    .show()
                 showProgress(false)
             }
         )

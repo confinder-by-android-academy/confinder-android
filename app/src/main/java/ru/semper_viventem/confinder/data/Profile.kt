@@ -8,6 +8,17 @@ data class Profile(
     @SerializedName("family_name") val lastName: String,
     @SerializedName("picture") val photo: String,
     @SerializedName("description") val description: String,
-    @SerializedName("contacts") val contacts: Map<String, String>,
+    @SerializedName("contacts") val contacts: List<Contact>,
     @SerializedName("tags") val tags: List<String>
+)
+
+data class ProfileCredentials(
+    @SerializedName("description") val description: String,
+    @SerializedName("contacts") val contacts: List<Contact>,
+    @SerializedName("tags") val tags: List<String>
+)
+
+data class Contact(
+    @SerializedName("key") val contactType: String,
+    @SerializedName("value") val value: String
 )
