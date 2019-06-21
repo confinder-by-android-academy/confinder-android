@@ -2,16 +2,13 @@ package ru.semper_viventem.confinder.ui
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import ru.semper_viventem.confinder.R
+import androidx.fragment.app.Fragment
 import ru.semper_viventem.confinder.ui.auth.AuthScreen
 
 class MainActivity : AppCompatActivity(), NavigationRouter {
 
-    private val containerId = R.id.container
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
 
         handleMessage(NavigationMessage.OpenAuthScreen)
     }
@@ -22,10 +19,10 @@ class MainActivity : AppCompatActivity(), NavigationRouter {
         }
     }
 
-    private fun openScreen(screen: Screen) {
+    private fun openScreen(screen: Fragment) {
         supportFragmentManager
             .beginTransaction()
-            .add(containerId, screen)
+            .replace(android.R.id.content, screen)
             .commit()
     }
 }

@@ -4,9 +4,9 @@ import android.content.Intent
 import android.view.View
 import kotlinx.android.synthetic.main.screen_auth.*
 import ru.semper_viventem.confinder.R
-import ru.semper_viventem.confinder.ui.Screen
+import ru.semper_viventem.confinder.ui.XmlScreen
 
-class AuthScreen : Screen() {
+class AuthScreen : XmlScreen() {
 
     override val layoutId: Int = R.layout.screen_auth
 
