@@ -26,7 +26,7 @@ android {
 
     signingConfigs {
         confinder {
-            storeFile file('confinder.keystore')
+            storeFile file('../confinder.keystore')
             storePassword 'confinder'
             keyAlias 'key0'
             keyPassword 'confinder'
