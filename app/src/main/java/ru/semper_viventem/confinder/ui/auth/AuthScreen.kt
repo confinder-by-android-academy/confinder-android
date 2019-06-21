@@ -7,9 +7,7 @@ import android.widget.Toast
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
-import com.google.android.gms.common.Scopes
 import com.google.android.gms.common.api.ApiException
-import com.google.android.gms.common.api.Scope
 import kotlinx.android.synthetic.main.screen_auth.*
 import ru.semper_viventem.confinder.BuildConfig
 import ru.semper_viventem.confinder.R
@@ -25,9 +23,8 @@ class AuthScreen : XmlScreen() {
 
     override val layoutId: Int = R.layout.screen_auth
 
-    private val gso = GoogleSignInOptions.Builder()
-        .requestScopes(Scope(Scopes.DRIVE_APPFOLDER))
-        .requestServerAuthCode(BuildConfig.GOOGLE_AUTH_KEY)
+    private val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+        .requestIdToken(BuildConfig.GOOGLE_AUTH_KEY)
         .requestEmail()
         .build()
 
@@ -46,7 +43,7 @@ class AuthScreen : XmlScreen() {
             showProgress(false)
             val task = GoogleSignIn.getSignedInAccountFromIntent(data)
             try {
-                val authCode = task.getResult(ApiException::class.java)?.serverAuthCode
+                val authCode = task.getResult(ApiException::class.java)?.idToken
                 authCode?.let { handleAuthCode(it) }
             } catch (e: ApiException) {
                 Toast.makeText(context, "Could not auth :(", Toast.LENGTH_LONG).show()
