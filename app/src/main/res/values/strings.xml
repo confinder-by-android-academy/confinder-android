@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">confinder</string>
+    <string name="sign_in">Sign in</string>
 </resources>
