@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "1057163609315",
+    "firebase_url": "https://confinder-1561141162175.firebaseio.com",
+    "project_id": "confinder-1561141162175",
+    "storage_bucket": "confinder-1561141162175.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1057163609315:android:c139566085347baa",
+        "android_client_info": {
+          "package_name": "ru.semper_viventem.confinder"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1057163609315-heimok9c9kforv31omeuo0s8nv3q866l.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ru.semper_viventem.confinder",
+            "certificate_hash": "96d5bb53dab16b5e8544053c0b4cceaeca890233"
+          }
+        },
+        {
+          "client_id": "1057163609315-uk0s1ovune5bfifof7m1ij07u3qik6co.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDWbsL_cOtOeIC4_rck8DAKPhwY9msEhhk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1057163609315-uk0s1ovune5bfifof7m1ij07u3qik6co.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
