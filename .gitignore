@@ -12,3 +12,7 @@
 /build
 /captures
 .externalNativeBuild
+
+app/debug/output\.json
+
+*.apk

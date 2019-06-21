@@ -5,7 +5,9 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
 android {
+
     compileSdkVersion 28
+
     defaultConfig {
         applicationId "ru.semper_viventem.confinder"
         minSdkVersion 21
@@ -14,12 +16,36 @@ android {
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
+
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
+    signingConfigs {
+        confinder {
+            storeFile file('confinder.keystore')
+            storePassword 'confinder'
+            keyAlias 'key0'
+            keyPassword 'confinder'
+        }
+    }
+
+    buildTypes {
+
+        debug {
+            signingConfig signingConfigs.confinder
+        }
+
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.confinder
+        }
+    }
+
 }
 
 dependencies {
