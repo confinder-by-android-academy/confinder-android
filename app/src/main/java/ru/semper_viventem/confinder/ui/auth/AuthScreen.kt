@@ -12,7 +12,9 @@ import kotlinx.android.synthetic.main.screen_auth.*
 import ru.semper_viventem.confinder.BuildConfig
 import ru.semper_viventem.confinder.R
 import ru.semper_viventem.confinder.data.gateway.AuthGateway
+import ru.semper_viventem.confinder.ui.NavigationMessage
 import ru.semper_viventem.confinder.ui.XmlScreen
+import ru.semper_viventem.confinder.ui.sendNavigationMessage
 import ru.semper_viventem.confinder.ui.visible
 
 class AuthScreen : XmlScreen() {
@@ -47,7 +49,7 @@ class AuthScreen : XmlScreen() {
                 authCode?.let { handleAuthCode(it) }
             } catch (e: ApiException) {
                 showProgress(false)
-                Toast.makeText(context, "Could not auth :(", Toast.LENGTH_LONG).show()
+                Toast.makeText(context, getString(R.string.auth_failure_message), Toast.LENGTH_LONG).show()
                 Log.e(TAG, e.toString())
             }
         }
@@ -65,8 +67,8 @@ class AuthScreen : XmlScreen() {
         AuthGateway.logInWithToken(
             token = authCode,
             onSuccess = {
-                Toast.makeText(context, "Success!", Toast.LENGTH_LONG).show()
                 showProgress(false)
+                sendNavigationMessage(NavigationMessage.OpenProfileDataScreen)
             },
             onError = { e ->
                 Log.e(TAG, e.toString())
