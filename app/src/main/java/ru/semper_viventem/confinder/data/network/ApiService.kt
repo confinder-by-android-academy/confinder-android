@@ -1,4 +1,4 @@
-package ru.semper_viventem.confinder.data
+package ru.semper_viventem.confinder.data.network
 
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory

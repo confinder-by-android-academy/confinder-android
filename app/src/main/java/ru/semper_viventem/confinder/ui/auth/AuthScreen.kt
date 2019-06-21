@@ -11,6 +11,7 @@ import com.google.android.gms.common.api.ApiException
 import kotlinx.android.synthetic.main.screen_auth.*
 import ru.semper_viventem.confinder.BuildConfig
 import ru.semper_viventem.confinder.R
+import ru.semper_viventem.confinder.data.gateway.AuthGateway
 import ru.semper_viventem.confinder.ui.XmlScreen
 import ru.semper_viventem.confinder.ui.visible
 
@@ -40,12 +41,12 @@ class AuthScreen : XmlScreen() {
         super.onActivityResult(requestCode, resultCode, data)
 
         if (requestCode == RC_SIGN_IN) {
-            showProgress(false)
             val task = GoogleSignIn.getSignedInAccountFromIntent(data)
             try {
                 val authCode = task.getResult(ApiException::class.java)?.idToken
                 authCode?.let { handleAuthCode(it) }
             } catch (e: ApiException) {
+                showProgress(false)
                 Toast.makeText(context, "Could not auth :(", Toast.LENGTH_LONG).show()
                 Log.e(TAG, e.toString())
             }
@@ -59,10 +60,19 @@ class AuthScreen : XmlScreen() {
     }
 
     private fun handleAuthCode(authCode: String) {
-
-        //TODO handle auth code to server
-
         Log.d(TAG, authCode)
+
+        AuthGateway.logInWithToken(
+            token = authCode,
+            onSuccess = {
+                Toast.makeText(context, "Success!", Toast.LENGTH_LONG).show()
+                showProgress(false)
+            },
+            onError = { e ->
+                Log.e(TAG, e.toString())
+                showProgress(false)
+            }
+        )
     }
 
     private fun showProgress(show: Boolean) {
