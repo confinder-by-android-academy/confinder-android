@@ -1,4 +1,4 @@
-package ru.semper_viventem.confinder
+package ru.semper_viventem.confinder.ui
 
 interface NavigationRouter {
 

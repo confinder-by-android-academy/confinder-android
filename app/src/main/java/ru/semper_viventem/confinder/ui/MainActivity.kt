@@ -1,8 +1,9 @@
-package ru.semper_viventem.confinder
+package ru.semper_viventem.confinder.ui
 
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import ru.semper_viventem.confinder.R
 
 class MainActivity : AppCompatActivity(), NavigationRouter {
 
