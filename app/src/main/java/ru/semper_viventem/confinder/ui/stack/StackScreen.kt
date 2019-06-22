@@ -127,7 +127,7 @@ class StackScreen : Fragment() {
                 }
             })
             nameView.text = name
-            tagsView.swapAdapter(ChipsAdapter(nextInterests()), false)
+            tagsView.swapAdapter(ChipsAdapter(nextInterests(), canRemove = false), false)
         }
     }
 
