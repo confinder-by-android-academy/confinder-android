@@ -14,6 +14,7 @@ object AuthGateway {
     private var token: String? = null
     private var profile: Profile? = null
 
+    @Synchronized
     fun logInWithToken(
         token: String,
         onSuccess: (profile: Profile) -> Unit,
@@ -39,13 +40,14 @@ object AuthGateway {
         )
     }
 
+    @Synchronized
     fun postUser(
         profileCredentials: ProfileCredentials,
         onSuccess: (profile: Profile) -> Unit,
         onError: (e: Throwable) -> Unit
     ) {
         if (token == null) {
-            onError.invoke(IllegalStateException("User no authorized"))
+            onError.invoke(IllegalStateException("User is not authorized"))
         }
 
         api.postUser(token!!, profileCredentials).enqueue(
