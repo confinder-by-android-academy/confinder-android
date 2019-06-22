@@ -8,7 +8,7 @@ data class Profile(
     @SerializedName("family_name") val lastName: String,
     @SerializedName("picture") val photo: String,
     @SerializedName("description") val description: String,
-    @SerializedName("contacts") val contacts: List<Contact>,
+    @SerializedName("contacts") val contacts: List<Contact>?,
     @SerializedName("tags") val tags: List<String>
 )
 
