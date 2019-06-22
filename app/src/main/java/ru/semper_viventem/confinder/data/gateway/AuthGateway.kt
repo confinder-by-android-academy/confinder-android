@@ -11,10 +11,10 @@ import ru.semper_viventem.confinder.data.network.NetworkError
 object AuthGateway {
 
     private val api = ApiService.api
+
     private var token: String? = null
     private var profile: Profile? = null
 
-    @Synchronized
     fun logInWithToken(
         token: String,
         onSuccess: (profile: Profile) -> Unit,
@@ -40,7 +40,6 @@ object AuthGateway {
         )
     }
 
-    @Synchronized
     fun postUser(
         profileCredentials: ProfileCredentials,
         onSuccess: (profile: Profile) -> Unit,
@@ -48,6 +47,7 @@ object AuthGateway {
     ) {
         if (token == null) {
             onError.invoke(IllegalStateException("User is not authorized"))
+            return
         }
 
         api.postUser(token!!, profileCredentials).enqueue(
