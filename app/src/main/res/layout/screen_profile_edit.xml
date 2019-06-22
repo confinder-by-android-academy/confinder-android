@@ -4,67 +4,100 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="16dp">
+    android:layout_height="match_parent">
 
     <ImageView
         android:id="@+id/image"
         android:layout_width="120dp"
         android:layout_height="120dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="32dp"
         tools:src="@mipmap/ic_launcher"/>
 
     <TextView
         android:id="@+id/firstName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toEndOf="@id/image"
         android:layout_marginStart="16dp"
+        android:layout_marginTop="32dp"
+        android:layout_toEndOf="@id/image"
         android:textColor="?android:textColorPrimary"
         android:textSize="18sp"
-        tools:text="Vasya" />
+        tools:text="Vasya"/>
 
     <TextView
         android:id="@+id/lastName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toEndOf="@id/image"
         android:layout_below="@id/firstName"
-        android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
+        android:layout_toEndOf="@id/image"
         android:textColor="?android:textColorPrimary"
         android:textSize="18sp"
-        tools:text="Poopkeen" />
+        tools:text="Poopkeen"/>
 
-    <EditText
-        android:id="@+id/description"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/descriptionLayout"
         android:layout_width="match_parent"
-        android:layout_height="150dp"
-        android:layout_marginTop="32dp"
-        android:layout_marginBottom="16dp"
+        android:layout_height="wrap_content"
         android:layout_below="@id/image"
-        android:gravity="top"
-        android:hint="Description"
-        android:maxLength="140"
-        android:inputType="textMultiLine|textCapSentences"/>
+        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="32dp"
+        app:boxBackgroundColor="@color/text_backgraund"
+        app:boxCornerRadiusTopEnd="15dp"
+        app:boxCornerRadiusTopStart="15dp">
 
-    <EditText
-        android:id="@+id/tags"
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/description"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:gravity="top"
+            android:hint="Description"
+            android:inputType="textMultiLine|textCapSentences"
+            android:maxLength="140"/>
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tagsLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/description"
-        android:hint="Tags"
-        android:maxLines="1"
-        android:inputType="textMultiLine"/>
+        android:layout_below="@id/descriptionLayout"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        app:boxCornerRadiusTopEnd="15dp"
+        app:boxCornerRadiusTopStart="15dp">
 
-    <EditText
-        android:id="@+id/telegram"
+        <EditText
+            android:id="@+id/tags"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Tags"
+            android:inputType="textMultiLine"
+            android:maxLines="1"/>
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/telegramLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_below="@id/tags"
-        android:hint="Telegram"
-        android:inputType="textEmailAddress"
-        android:maxLines="1"/>
+        android:layout_below="@id/tagsLayout"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        app:boxCornerRadiusTopEnd="15dp"
+        app:boxCornerRadiusTopStart="15dp">
+
+        <EditText
+            android:id="@+id/telegram"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:hint="Telegram"
+            android:inputType="textEmailAddress"
+            android:maxLines="1"/>
+    </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/confirm"
@@ -73,7 +106,8 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:layout_margin="16dp"
-        app:tint="@color/white"
-        app:srcCompat="@drawable/ic_confirm"/>
+        app:backgroundTint="@color/colorAccent"
+        app:srcCompat="@drawable/ic_confirm"
+        app:tint="@color/white"/>
 
 </RelativeLayout>
