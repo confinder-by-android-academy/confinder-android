@@ -1,10 +1,7 @@
 package ru.semper_viventem.confinder.data.network
 
 import retrofit2.Call
-import retrofit2.http.Body
-import retrofit2.http.GET
-import retrofit2.http.Header
-import retrofit2.http.POST
+import retrofit2.http.*
 import ru.semper_viventem.confinder.data.Profile
 import ru.semper_viventem.confinder.data.ProfileCredentials
 
@@ -18,4 +15,13 @@ interface Api {
         @Header("API-KEY") authcode: String,
         @Body profile: ProfileCredentials
     ): Call<Profile>
+
+    @GET("swipe-list/{confId}")
+    fun getSwipeList(@Header("API-KEY") token: String, @Path("confId") confId: Int): Call<List<Profile>>
+
+    @POST("like/{userId}")
+    fun like(@Header("API-KEY") token: String, @Path("userId") userId: String): Call<Unit>
+
+    @POST("like/{userId}")
+    fun dislike(@Header("API-KEY") token: String, @Path("userId") userId: String): Call<Unit>
 }
