@@ -22,7 +22,7 @@ class MainActivity : AppCompatActivity(), NavigationRouter {
             NavigationMessage.OpenProfileDataScreen -> openScreen(ProfileScreen())
             NavigationMessage.OpenStackScreen -> openScreen(StackScreen())
             NavigationMessage.OpenMatchingScreen -> openScreen(MatchesScreen())
-        }!!
+        }
     }
 
     private fun openScreen(screen: Fragment) {
