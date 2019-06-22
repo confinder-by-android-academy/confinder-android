@@ -1,6 +1,7 @@
 package ru.semper_viventem.confinder.ui.matches
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
@@ -19,6 +20,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.flexbox.FlexboxLayoutManager
 import com.squareup.picasso.Picasso
 import retrofit2.Call
+import ru.semper_viventem.confinder.Telegram
 import ru.semper_viventem.confinder.data.Contact
 import ru.semper_viventem.confinder.data.Profile
 import ru.semper_viventem.confinder.data.gateway.SwipeListGateway
@@ -28,6 +30,12 @@ import ru.semper_viventem.confinder.ui.chips.ChipsAdapter
 
 
 class MatchesScreen : Fragment() {
+
+    private companion object {
+        private val APPS = mapOf(
+            "Telegram" to Telegram
+        )
+    }
 
     private var users: List<Any>? = null
     private var currentCall: Call<*>? = null
@@ -70,7 +78,7 @@ class MatchesScreen : Fragment() {
             }
             rv.addItemDecoration(MatchDividerDecor(requireContext()))
 
-            val adapter = MatchesAdapter(users ?: emptyList())
+            val adapter = MatchesAdapter(requireActivity(), users ?: emptyList())
             this.adapter = adapter
             rv.adapter = adapter
         }
@@ -156,7 +164,37 @@ class MatchesScreen : Fragment() {
         }
     }
 
+    class ContactHolder(
+        private val activity: Activity
+    ) : RecyclerView.ViewHolder(TextView(activity)), View.OnClickListener {
+        init { with(itemView as TextView) {
+            layoutParams = RecyclerLP(matchParent, wrapContent)
+            setPadding(dp(8), dp(4), dp(8), dp(4))
+            textSize = 16f
+            setTextColor(Color.BLACK)
+            background = context.obtainStyledAttributes(intArrayOf(android.R.attr.selectableItemBackground)).let {
+                val d = it.getDrawable(0)
+                it.recycle()
+                d
+            }
+            setOnClickListener(this@ContactHolder)
+        } }
+
+        private var contact: Contact? = null
+        fun bind(contact: Contact) {
+            this.contact = contact
+            val tv = itemView as TextView
+            tv.setCompoundDrawablesRelativeWithIntrinsicBounds(APPS[contact.contactType]?.iconRes ?: 0, 0, 0, 0)
+            tv.text = contact.value
+        }
+
+        override fun onClick(v: View?) {
+            APPS[contact!!.contactType]?.open(activity, contact!!.value)
+        }
+    }
+
     private class MatchesAdapter(
+        private val activity: Activity,
         items: List<Any> // = Profile | Contact
     ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -178,16 +216,7 @@ class MatchesScreen : Fragment() {
             val context = parent.context
             return when (viewType) {
                 1 -> MatchHolder(context, chipsPool)
-                2 -> object : RecyclerView.ViewHolder(TextView(context).apply {
-                    layoutParams = RecyclerLP(
-                        matchParent,
-                        wrapContent
-                    ).apply {
-                        setMargins(dp(8), dp(4), dp(8), dp(4))
-                    }
-                    textSize = 16f
-                    setTextColor(Color.BLACK)
-                }) {}
+                2 -> ContactHolder(activity)
                 else -> throw AssertionError()
             }
         }
@@ -196,7 +225,8 @@ class MatchesScreen : Fragment() {
             val item = items[position]
             when (holder) {
                 is MatchHolder -> holder.bind(item as Profile)
-                else -> (holder.itemView as TextView).text = (item as Contact).value
+                is ContactHolder -> holder.bind(item as Contact)
+                else -> throw AssertionError()
             }
         }
 
