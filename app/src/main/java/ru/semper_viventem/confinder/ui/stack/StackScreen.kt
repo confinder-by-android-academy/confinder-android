@@ -67,7 +67,7 @@ class StackScreen : Fragment() {
         private val cardView get() = itemView as CardView
         val photoView: ImageView
         val nameView: TextView
-        val tagsView: RecyclerView
+        val interestsView: RecyclerView
         init { with(cardView) {
             layoutParams = RecyclerLP(matchParent, matchParent).apply { setMargins(dp(48)) }
             cardElevation = 24f
@@ -78,19 +78,15 @@ class StackScreen : Fragment() {
                 orientation = LinearLayout.VERTICAL
                 weightSum = 2f
 
-                add(LinearLP(matchParent, 0, 1f), ::ImageView) {
-                    photoView = this
-                }
+                photoView = add(LinearLP(matchParent, 0, 1f), ::ImageView)
 
-                add(LinearLP(matchParent, wrapContent), ::TextView) {
-                    nameView = this
+                nameView = add(LinearLP(matchParent, wrapContent), ::TextView) {
                     setPadding(dp(16))
                     textSize = 32f
                     setTextColor(Color.BLACK)
                 }
 
-                add(LinearLP(matchParent, wrapContent), ::RecyclerView) {
-                    tagsView = this
+                interestsView = add(LinearLP(matchParent, wrapContent), ::RecyclerView) {
                     setPadding(dp(12)) // 16dp - 4dp chip margin
                     layoutManager = FlexboxLayoutManager(context)
                     setRecycledViewPool(chipsPool)
@@ -127,7 +123,7 @@ class StackScreen : Fragment() {
                 }
             })
             nameView.text = name
-            tagsView.swapAdapter(ChipsAdapter(nextInterests(), canRemove = false), false)
+            interestsView.swapAdapter(ChipsAdapter(nextInterests(), canRemove = false), true)
         }
     }
 
