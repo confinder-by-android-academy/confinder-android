@@ -15,6 +15,35 @@ object AuthGateway {
     private var token: String? = null
     private var profile: Profile? = null
 
+    fun getUser(
+        onSuccess: (profile: Profile) -> Unit,
+        onError: (e: Throwable) -> Unit
+    ) {
+
+        if (token == null) {
+            onError.invoke(IllegalStateException("User is not authorized"))
+            return
+        }
+
+        api.getUser(token!!).enqueue(
+            object : Callback<Profile> {
+
+                override fun onResponse(call: Call<Profile>, response: Response<Profile>) {
+                    this@AuthGateway.profile = response.body()
+                    if (response.isSuccessful) {
+                        onSuccess.invoke(profile!!)
+                    } else {
+                        onError.invoke(NetworkError(response.code()))
+                    }
+                }
+
+                override fun onFailure(call: Call<Profile>, t: Throwable) {
+                    onError.invoke(t)
+                }
+            }
+        )
+    }
+
     fun logInWithToken(
         token: String,
         onSuccess: (profile: Profile) -> Unit,
