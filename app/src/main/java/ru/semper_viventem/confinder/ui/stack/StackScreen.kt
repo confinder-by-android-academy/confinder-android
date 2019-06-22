@@ -74,10 +74,18 @@ class StackScreen : Fragment() {
                 override fun onItemSwiped() {
                     adapter.removeTopItem()
                 }
-                override fun onItemSwipedRight() = Unit
                 override fun onItemSwipedDown() = Unit
                 override fun onItemSwipedUp() = Unit
-                override fun onItemSwipedLeft() = Unit
+                override fun onItemSwipedLeft() {
+                    if (adapter.items.isNotEmpty()) {
+                        // TODO: dislike adapter.items[0]
+                    }
+                }
+                override fun onItemSwipedRight() {
+                    if (adapter.items.isNotEmpty()) {
+                        // TODO: like adapter.items[0]
+                    }
+                }
             }) {
                 override fun getAllowedSwipeDirectionsMovementFlags(viewHolder: RecyclerView.ViewHolder): Int =
                     ItemTouchHelper.RIGHT or ItemTouchHelper.LEFT
@@ -135,30 +143,32 @@ class StackScreen : Fragment() {
         profiles: List<Profile>
     ) : RecyclerView.Adapter<CardHolder>() {
 
-        var items = profiles
+        var _items = ArrayList(profiles)
+
+        var items: List<Profile>
+            get() = _items
             set(value) {
-                field = value
+                _items = ArrayList(value)
                 notifyDataSetChanged()
             }
 
         val chipsPool = RecyclerView.RecycledViewPool()
 
         override fun getItemCount(): Int =
-            items.size
+            _items.size
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CardHolder =
             CardHolder(parent.context, chipsPool)
 
         override fun onBindViewHolder(holder: CardHolder, position: Int) {
-            holder.bind(items[position])
+            holder.bind(_items[position])
         }
 
         fun removeTopItem() {
-            TODO()
-            /*if (items > 0) {
-                items--
+            if (_items.size > 0) {
+                _items.removeAt(0)
                 notifyItemRemoved(0)
-            }*/
+            }
         }
 
     }
