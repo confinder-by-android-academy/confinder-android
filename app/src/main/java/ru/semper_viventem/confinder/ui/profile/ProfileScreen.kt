@@ -47,10 +47,6 @@ class ProfileScreen : XmlScreen() {
                 sendNavigationMessage(NavigationMessage.OpenStackScreen)
             },
             onError = {
-
-                // todo remove
-                sendNavigationMessage(NavigationMessage.OpenStackScreen)
-
                 Log.e(TAG, it.toString())
                 Toast.makeText(context, "Error :(", Toast.LENGTH_LONG).show()
             }
