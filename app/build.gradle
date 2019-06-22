@@ -15,6 +15,9 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField('String', 'GOOGLE_AUTH_KEY', '"1057163609315-uk0s1ovune5bfifof7m1ij07u3qik6co.apps.googleusercontent.com"')
+        buildConfigField('String', 'API_URL', '"https://confinder.tech/v1/"')
     }
 
     buildTypes {
@@ -63,8 +66,9 @@ dependencies {
     // Android X
     implementation 'androidx.appcompat:appcompat:1.0.2'
     implementation 'androidx.core:core-ktx:1.0.2'
-    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+    implementation 'com.google.android:flexbox:1.1.0'
     implementation 'com.google.android.material:material:1.1.0-alpha07'
+    implementation 'com.github.nihad92:SwipeableCards:1.0.19'
 
     // Tests
     testImplementation 'junit:junit:4.12'
@@ -73,7 +77,12 @@ dependencies {
 
     // Firebase
     implementation 'com.google.firebase:firebase-core:17.0.0'
-    implementation 'com.google.firebase:firebase-auth:18.0.0'
+    implementation 'com.google.android.gms:play-services-auth:17.0.0'
+
+    // Web
+    implementation 'com.squareup.retrofit2:retrofit:2.5.0'
+    implementation 'com.google.code.gson:gson:2.8.5'
+    implementation 'com.squareup.retrofit2:converter-gson:2.5.0'
 }
 
 apply plugin: 'com.google.gms.google-services'

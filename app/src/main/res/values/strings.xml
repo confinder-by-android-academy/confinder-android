@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">confinder</string>
     <string name="sign_in">Sign in</string>
+    <string name="auth_failure_message">Could not auth :(</string>
 </resources>
