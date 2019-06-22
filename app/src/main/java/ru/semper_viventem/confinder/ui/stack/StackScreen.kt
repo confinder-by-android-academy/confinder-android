@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.flexbox.FlexboxLayoutManager
 import ru.semper_viventem.confinder.dp
 import ru.semper_viventem.confinder.ui.*
+import ru.semper_viventem.confinder.ui.chips.ChipsAdapter
 import swipeable.com.layoutmanager.OnItemSwiped
 import swipeable.com.layoutmanager.SwipeableLayoutManager
 import swipeable.com.layoutmanager.SwipeableTouchHelperCallback
@@ -46,7 +47,7 @@ class StackScreen : Fragment() {
             val adapter = CardAdapter()
             it.adapter = adapter
             it.layoutManager = SwipeableLayoutManager()
-            ItemTouchHelper(SwipeableTouchHelperCallback(object : OnItemSwiped {
+            ItemTouchHelper(object : SwipeableTouchHelperCallback(object : OnItemSwiped {
                 override fun onItemSwiped() {
                     adapter.removeTopItem()
                 }
@@ -54,7 +55,10 @@ class StackScreen : Fragment() {
                 override fun onItemSwipedDown() = Unit
                 override fun onItemSwipedUp() = Unit
                 override fun onItemSwipedLeft() = Unit
-            })).attachToRecyclerView(it)
+            }) {
+                override fun getAllowedSwipeDirectionsMovementFlags(viewHolder: RecyclerView.ViewHolder): Int =
+                    ItemTouchHelper.RIGHT or ItemTouchHelper.LEFT
+            }).attachToRecyclerView(it)
         }
 
     private class CardHolder(
@@ -90,6 +94,7 @@ class StackScreen : Fragment() {
                     setPadding(dp(12)) // 16dp - 4dp chip margin
                     layoutManager = FlexboxLayoutManager(context)
                     setRecycledViewPool(chipsPool)
+                    overScrollMode = View.OVER_SCROLL_NEVER
                 }
 
             }
