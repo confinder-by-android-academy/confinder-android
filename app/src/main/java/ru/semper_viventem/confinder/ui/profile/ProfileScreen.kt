@@ -14,6 +14,7 @@ import ru.semper_viventem.confinder.data.gateway.AuthGateway
 import ru.semper_viventem.confinder.ui.NavigationMessage
 import ru.semper_viventem.confinder.ui.XmlScreen
 import ru.semper_viventem.confinder.ui.sendNavigationMessage
+import ru.semper_viventem.confinder.ui.visible
 
 class ProfileScreen : XmlScreen() {
 
@@ -35,6 +36,7 @@ class ProfileScreen : XmlScreen() {
     }
 
     private fun sendConfirmData() {
+        showProgress(true)
         val description = description.text.toString()
         val tags = getTags(tags.text.toString())
         val telegramContact = Contact(TELEGRAM_VALUE, telegram.text.toString())
@@ -44,9 +46,11 @@ class ProfileScreen : XmlScreen() {
         AuthGateway.postUser(
             profileCredentials = profileCredentials,
             onSuccess = { profile ->
+                showProgress(false)
                 sendNavigationMessage(NavigationMessage.OpenStackScreen)
             },
             onError = {
+                showProgress(false)
                 Log.e(TAG, it.toString())
                 Toast.makeText(context, "Error :(", Toast.LENGTH_LONG).show()
             }
@@ -57,8 +61,10 @@ class ProfileScreen : XmlScreen() {
         AuthGateway.getUser(
             onSuccess = { profile ->
                 drawProfile(profile)
+                showProgress(false)
             },
             onError = { error ->
+                showProgress(false)
                 Toast.makeText(context, "Error :(", Toast.LENGTH_LONG).show()
             }
         )
@@ -80,5 +86,11 @@ class ProfileScreen : XmlScreen() {
 
     private fun getTags(tagsStr: String): List<String> {
         return tagsStr.split(SPLIT_PATTERN)
+            .filter { it.isNotBlank() }
+    }
+
+    private fun showProgress(show: Boolean) {
+        confirm.visible(!show)
+        progress.visible(show)
     }
 }
