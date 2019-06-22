@@ -11,6 +11,7 @@ import ru.semper_viventem.confinder.data.Contact
 import ru.semper_viventem.confinder.data.Profile
 import ru.semper_viventem.confinder.data.ProfileCredentials
 import ru.semper_viventem.confinder.data.gateway.AuthGateway
+import ru.semper_viventem.confinder.data.network.NetworkError
 import ru.semper_viventem.confinder.ui.NavigationMessage
 import ru.semper_viventem.confinder.ui.XmlScreen
 import ru.semper_viventem.confinder.ui.sendNavigationMessage
@@ -64,6 +65,11 @@ class ProfileScreen : XmlScreen() {
                 showProgress(false)
             },
             onError = { error ->
+
+                if (error is NetworkError && error.errorCode == 401) {
+                    sendNavigationMessage(NavigationMessage.OpenAuthScreen)
+                }
+
                 showProgress(false)
                 Toast.makeText(context, "Error :(", Toast.LENGTH_LONG).show()
             }
