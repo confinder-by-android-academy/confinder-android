@@ -2,14 +2,15 @@ package ru.semper_viventem.confinder.data.gateway
 
 import ru.semper_viventem.confinder.data.Profile
 import ru.semper_viventem.confinder.data.ProfileCredentials
-import ru.semper_viventem.confinder.data.network.ApiService
+import ru.semper_viventem.confinder.data.network.api
 
 object AuthGateway {
 
-    private val api = ApiService.api
+    var token: String? = null
+        private set
 
-    private var token: String? = null
-    private var profile: Profile? = null
+    var profile: Profile? = null
+        private set
 
     fun getUser(
         onSuccess: (profile: Profile) -> Unit,
@@ -65,8 +66,4 @@ object AuthGateway {
                 onError = onError
             )
     }
-
-    fun getToken(): String? = token
-
-    fun getProfile(): Profile? = profile
 }

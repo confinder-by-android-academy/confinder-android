@@ -5,7 +5,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import ru.semper_viventem.confinder.data.network.NetworkError
 
-fun <T> Call<T>.execute(onSuccess: (T) -> Unit, onError: (e: Throwable) -> Unit) {
+inline fun <T> Call<T>.execute(crossinline onSuccess: (T) -> Unit, crossinline onError: (e: Throwable) -> Unit) {
     this.enqueue(
         object : Callback<T> {
 
@@ -13,11 +13,15 @@ fun <T> Call<T>.execute(onSuccess: (T) -> Unit, onError: (e: Throwable) -> Unit)
                 if (response.isSuccessful) {
                     onSuccess.invoke(response.body()!!)
                 } else {
-                    onError.invoke(NetworkError(response.code()))
+                    err(NetworkError(response.code()))
                 }
             }
 
             override fun onFailure(call: Call<T>, t: Throwable) {
+                err(t)
+            }
+
+            private fun err(t: Throwable) {
                 onError.invoke(t)
             }
         }

@@ -1,16 +1,14 @@
 package ru.semper_viventem.confinder.data.gateway
 
 import ru.semper_viventem.confinder.data.Profile
-import ru.semper_viventem.confinder.data.network.ApiService
+import ru.semper_viventem.confinder.data.network.api
 
 object SwipeListGateway {
 
     private const val DEFAULT_CONFERENCE_ID = 1
 
-    private val api = ApiService.api
-
     private val token: String?
-        get() = AuthGateway.getToken()
+        get() = AuthGateway.token
 
     fun getSwipeList(
         onSuccess: (profiles: List<Profile>) -> Unit,
