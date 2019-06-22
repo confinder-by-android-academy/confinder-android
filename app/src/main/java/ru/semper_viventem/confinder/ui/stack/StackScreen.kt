@@ -1,7 +1,10 @@
 package ru.semper_viventem.confinder.ui.stack
 
 import android.content.Context
+import android.content.res.Resources
+import android.graphics.Canvas
 import android.graphics.Color
+import android.graphics.PorterDuff
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,6 +14,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.cardview.widget.CardView
+import androidx.core.math.MathUtils
 import androidx.core.view.setMargins
 import androidx.core.view.setPadding
 import androidx.fragment.app.Fragment
@@ -18,6 +22,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.flexbox.FlexboxLayoutManager
 import com.squareup.picasso.Picasso
 import retrofit2.Call
+import ru.semper_viventem.confinder.R
 import ru.semper_viventem.confinder.data.Profile
 import ru.semper_viventem.confinder.data.gateway.SwipeListGateway
 import ru.semper_viventem.confinder.dp
@@ -27,8 +32,10 @@ import swipeable.com.layoutmanager.OnItemSwiped
 import swipeable.com.layoutmanager.SwipeableLayoutManager
 import swipeable.com.layoutmanager.SwipeableTouchHelperCallback
 import swipeable.com.layoutmanager.touchelper.ItemTouchHelper
+import kotlin.math.absoluteValue
 import kotlin.math.max
 import kotlin.math.min
+import kotlin.math.sin
 
 
 class StackScreen : Fragment() {
@@ -70,27 +77,64 @@ class StackScreen : Fragment() {
             this.adapter = adapter
             it.adapter = adapter
             it.layoutManager = SwipeableLayoutManager()
-            ItemTouchHelper(object : SwipeableTouchHelperCallback(object : OnItemSwiped {
-                override fun onItemSwiped() {
-                    adapter.removeTopItem()
-                }
-                override fun onItemSwipedDown() = Unit
-                override fun onItemSwipedUp() = Unit
-                override fun onItemSwipedLeft() {
-                    if (adapter.items.isNotEmpty()) {
-                        // TODO: dislike adapter.items[0]
-                    }
-                }
-                override fun onItemSwipedRight() {
-                    if (adapter.items.isNotEmpty()) {
-                        // TODO: like adapter.items[0]
-                    }
-                }
-            }) {
-                override fun getAllowedSwipeDirectionsMovementFlags(viewHolder: RecyclerView.ViewHolder): Int =
-                    ItemTouchHelper.RIGHT or ItemTouchHelper.LEFT
-            }).attachToRecyclerView(it)
+            ItemTouchHelper(TouchCallback(it, adapter, resources)).attachToRecyclerView(it)
         }
+
+    private inner class TouchCallback(
+        view: View, adapter: CardAdapter, res: Resources
+    ) : SwipeableTouchHelperCallback(ItemSwipeCallback(view, adapter)) {
+        override fun getAllowedSwipeDirectionsMovementFlags(viewHolder: RecyclerView.ViewHolder): Int =
+            ItemTouchHelper.RIGHT or ItemTouchHelper.LEFT
+
+        val like = res.getDrawable(R.drawable.ic_mood_black_24dp, null).mutate().also {
+            it.setColorFilter(0xFF_33EE55.toInt(), PorterDuff.Mode.SRC_ATOP)
+        }
+        val dislike = res.getDrawable(R.drawable.ic_mood_bad_black_24dp, null).mutate().also {
+            it.setColorFilter(0xFF_EE5533.toInt(), PorterDuff.Mode.SRC_ATOP)
+        }
+        override fun onChildDrawOver(
+            c: Canvas, recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder,
+            dX: Float, dY: Float,
+            actionState: Int,
+            isCurrentlyActive: Boolean
+        ) {
+            super.onChildDrawOver(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
+            val q = MathUtils.clamp(dX / viewHolder.itemView.width, -2f, 2f)
+            val opacity = sin(q * Math.PI / 2).absoluteValue
+            val d = if (q < 0) dislike else like
+            d.alpha = (255 * opacity).toInt()
+            val w = d.intrinsicWidth * 4
+            val h = d.intrinsicHeight * 4
+            val left = (recyclerView.width - w) / 2
+            val top = (recyclerView.height - h) / 2
+            d.setBounds(left, top, left + w, top + h)
+            d.draw(c)
+        }
+    }
+
+    private inner class ItemSwipeCallback(
+        private val view: View,
+        private val adapter: CardAdapter
+    ) : OnItemSwiped {
+        override fun onItemSwiped() {
+            adapter.removeTopItem()
+            if (adapter.items.isEmpty()) {
+                sendNavigationMessage(NavigationMessage.OpenMatchingScreen)
+            }
+        }
+        override fun onItemSwipedDown() = Unit
+        override fun onItemSwipedUp() = Unit
+        override fun onItemSwipedLeft() {
+            if (adapter.items.isNotEmpty()) {
+                SwipeListGateway.dislike(adapter.items[0].id)
+            }
+        }
+        override fun onItemSwipedRight() {
+            if (adapter.items.isNotEmpty()) {
+                SwipeListGateway.like(adapter.items[0].id)
+            }
+        }
+    }
 
     override fun onDestroyView() {
         adapter = null

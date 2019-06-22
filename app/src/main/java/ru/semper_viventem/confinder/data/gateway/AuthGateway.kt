@@ -22,7 +22,7 @@ object AuthGateway {
             return
         }
 
-        api.getUser(token!!).execute(
+        api.getUser(token!!).enqueue(
             onSuccess = { profile ->
                 this@AuthGateway.profile = profile
                 onSuccess.invoke(profile)
@@ -37,7 +37,7 @@ object AuthGateway {
         onError: (e: Throwable) -> Unit
     ) {
         api.getUser(token)
-            .execute(
+            .enqueue(
                 onSuccess = { profile ->
                     this@AuthGateway.token = token
                     this@AuthGateway.profile = profile
@@ -58,7 +58,7 @@ object AuthGateway {
         }
 
         api.postUser(token!!, profileCredentials)
-            .execute(
+            .enqueue(
                 onSuccess = { profile ->
                     this@AuthGateway.profile = profile
                     onSuccess.invoke(profile)

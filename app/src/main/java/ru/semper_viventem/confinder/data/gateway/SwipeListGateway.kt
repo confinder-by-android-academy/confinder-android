@@ -21,36 +21,34 @@ object SwipeListGateway {
             return null
         }
 
-        return api.getSwipeList(token!!, DEFAULT_CONFERENCE_ID).execute(onSuccess, onError)
+        return api.getSwipeList(token!!, DEFAULT_CONFERENCE_ID).enqueue(onSuccess, onError)
     }
 
     fun like(
-        userId: String,
+        userId: String/*,
         onSuccess: () -> Unit,
-        onError: (e: Throwable) -> Unit
+        onError: (e: Throwable) -> Unit*/
     ) {
 
-
         if (token == null) {
-            onError.invoke(IllegalStateException("User is not authorized"))
+//            onError.invoke(IllegalStateException("User is not authorized"))
             return
         }
 
-        api.like(token!!, userId).execute({ onSuccess.invoke() }, onError)
+        api.like(token!!, userId).enqueue({ /*onSuccess.invoke()*/ }, { } /*onError*/)
     }
 
     fun dislike(
-        userId: String,
+        userId: String/*,
         onSuccess: () -> Unit,
-        onError: (e: Throwable) -> Unit
+        onError: (e: Throwable) -> Unit*/
     ) {
 
-
         if (token == null) {
-            onError.invoke(IllegalStateException("User is not authorized"))
+//            onError.invoke(IllegalStateException("User is not authorized"))
             return
         }
 
-        api.dislike(token!!, userId).execute({ onSuccess.invoke() }, onError)
+        api.dislike(token!!, userId).enqueue({ /*onSuccess.invoke()*/ }, { } /*onError*/)
     }
 }

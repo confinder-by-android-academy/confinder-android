@@ -38,6 +38,6 @@ interface Api {
     @POST("like/{userId}")
     fun like(@Header("API-KEY") token: String, @Path("userId") userId: String): Call<Unit>
 
-    @POST("like/{userId}")
+    @POST("dislike/{userId}")
     fun dislike(@Header("API-KEY") token: String, @Path("userId") userId: String): Call<Unit>
 }

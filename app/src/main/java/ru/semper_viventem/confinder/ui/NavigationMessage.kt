@@ -4,4 +4,5 @@ sealed class NavigationMessage {
     object OpenAuthScreen : NavigationMessage()
     object OpenProfileDataScreen: NavigationMessage()
     object OpenStackScreen: NavigationMessage()
+    object OpenMatchingScreen: NavigationMessage()
 }

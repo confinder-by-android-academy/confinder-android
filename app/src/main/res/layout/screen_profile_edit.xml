@@ -44,7 +44,8 @@
         android:layout_below="@id/image"
         android:gravity="top"
         android:hint="Description"
-        android:maxLength="140"/>
+        android:maxLength="140"
+        android:inputType="textMultiLine|textCapSentences"/>
 
     <EditText
         android:id="@+id/tags"
@@ -52,7 +53,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/description"
         android:hint="Tags"
-        android:maxLines="1"/>
+        android:maxLines="1"
+        android:inputType="textMultiLine"/>
 
     <EditText
         android:id="@+id/telegram"

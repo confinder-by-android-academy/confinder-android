@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import ru.semper_viventem.confinder.ui.auth.AuthScreen
+import ru.semper_viventem.confinder.ui.matches.MatchesScreen
 import ru.semper_viventem.confinder.ui.profile.ProfileScreen
 import ru.semper_viventem.confinder.ui.stack.StackScreen
 
@@ -17,10 +18,11 @@ class MainActivity : AppCompatActivity(), NavigationRouter {
 
     override fun handleMessage(message: NavigationMessage) {
         when (message) {
-            is NavigationMessage.OpenAuthScreen -> openScreen(AuthScreen())
-            is NavigationMessage.OpenProfileDataScreen -> openScreen(ProfileScreen())
-            is NavigationMessage.OpenStackScreen -> openScreen(StackScreen())
-        }
+            NavigationMessage.OpenAuthScreen -> openScreen(AuthScreen())
+            NavigationMessage.OpenProfileDataScreen -> openScreen(ProfileScreen())
+            NavigationMessage.OpenStackScreen -> openScreen(StackScreen())
+            NavigationMessage.OpenMatchingScreen -> openScreen(MatchesScreen())
+        }!!
     }
 
     private fun openScreen(screen: Fragment) {
