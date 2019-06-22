@@ -30,7 +30,7 @@ class ChipHolder(
     }
 
     override fun onClick(v: View?) {
-        removeListener!!(layoutPosition)
+        removeListener!!(adapterPosition)
     }
 
 }
