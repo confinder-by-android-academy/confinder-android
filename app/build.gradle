@@ -51,6 +51,12 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
+    // FlexboxLayout
+    implementation 'com.google.android:flexbox:1.1.0'
+
+    // Recycler
+    implementation 'com.android.support:recyclerview-v7:28.1.0'
+
     // Kotlin
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
