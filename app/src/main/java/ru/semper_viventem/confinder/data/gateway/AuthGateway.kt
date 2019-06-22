@@ -7,7 +7,6 @@ import ru.semper_viventem.confinder.data.network.api
 object AuthGateway {
 
     var token: String? = null
-        private set
 
     var profile: Profile? = null
         private set
