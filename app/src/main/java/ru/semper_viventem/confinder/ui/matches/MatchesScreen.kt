@@ -170,6 +170,7 @@ class MatchesScreen : Fragment() {
         init { with(itemView as TextView) {
             layoutParams = RecyclerLP(matchParent, wrapContent)
             setPadding(dp(8), dp(4), dp(8), dp(4))
+            compoundDrawablePadding = dp(8)
             textSize = 16f
             setTextColor(Color.BLACK)
             background = context.obtainStyledAttributes(intArrayOf(android.R.attr.selectableItemBackground)).let {

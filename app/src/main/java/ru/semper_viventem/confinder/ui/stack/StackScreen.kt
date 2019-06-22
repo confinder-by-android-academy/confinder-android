@@ -153,6 +153,7 @@ class StackScreen : Fragment() {
         private val cardView get() = itemView as CardView
         val photoView: ImageView
         val nameView: TextView
+        val descriptionView: TextView
         val interestsView: RecyclerView
         init { with(cardView) {
             layoutParams = RecyclerLP(matchParent, matchParent).apply { setMargins(dp(48)) }
@@ -172,6 +173,12 @@ class StackScreen : Fragment() {
                     setTextColor(Color.BLACK)
                 }
 
+                descriptionView = add(LinearLP(matchParent, wrapContent), ::TextView) {
+                    setPadding(dp(16))
+                    textSize = 24f
+                    setTextColor(Color.BLACK)
+                }
+
                 interestsView = add(LinearLP(matchParent, wrapContent), ::RecyclerView) {
                     setPadding(dp(12)) // 16dp - 4dp chip margin
                     layoutManager = FlexboxLayoutManager(context)
@@ -185,6 +192,7 @@ class StackScreen : Fragment() {
         fun bind(profile: Profile) {
             Picasso.get().load(profile.photo).into(photoView)
             nameView.text = "%s %s".format(profile.firstName, profile.lastName)
+            descriptionView.text = profile.description
             interestsView.swapAdapter(ChipsAdapter(profile.tags, canRemove = false), true)
         }
     }
