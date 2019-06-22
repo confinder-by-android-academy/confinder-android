@@ -11,49 +11,74 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.core.view.setMargins
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.flexbox.FlexboxLayoutManager
 import com.squareup.picasso.Picasso
+import retrofit2.Call
 import ru.semper_viventem.confinder.data.Contact
 import ru.semper_viventem.confinder.data.Profile
+import ru.semper_viventem.confinder.data.gateway.SwipeListGateway
 import ru.semper_viventem.confinder.dp
 import ru.semper_viventem.confinder.ui.*
 import ru.semper_viventem.confinder.ui.chips.ChipsAdapter
-import java.util.*
-import kotlin.collections.ArrayList
 
 
 class MatchesScreen : Fragment() {
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
-        RecyclerView(requireContext()).apply {
-            val data = listOf(
-                Profile("ZzzZzzZ", "Ubuntu", "18.04", "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ab/Logo-ubuntu_cof-orange-hex.svg/1024px-Logo-ubuntu_cof-orange-hex.svg.png",
-                    "a very great user, some reified coolness!",
-                    listOf(Contact("", "+7 900 000 0000"), Contact("", "admin@127.0.0.1")),
-                    listOf("cool", "great", "zbs")
-                ), Profile(UUID.randomUUID().toString(), "Abibas", "Hardbass", "https://logos-download.com/wp-content/uploads/2016/03/Adidas_logo.png",
-                    "пау пау", listOf(), listOf("спорт", "кросовки")
-                )
-            )
-            val flattened = ArrayList<Any>(data.size)
-            data.forEach {
-                flattened.add(it)
-                flattened.addAll(it.contacts)
-            }
+    private var users: List<Any>? = null
+    private var currentCall: Call<*>? = null
+    private var adapter: MatchesAdapter? = null
 
-            layoutManager = GridLayoutManager(context, 2).apply {
+    init {
+        retainInstance = true
+    }
+
+    override fun onStart() {
+        super.onStart()
+        if (users == null) {
+            currentCall = SwipeListGateway.matches({ users ->
+                this.users = users
+                this.adapter?.items = users
+                currentCall = null
+            }, { e ->
+                e.printStackTrace()
+                currentCall = null
+                Toast.makeText(context, "Отстооооой.", Toast.LENGTH_SHORT).show()
+            })
+        }
+    }
+
+    override fun onStop() {
+        currentCall?.let {
+            it.cancel()
+            currentCall = null
+        }
+        super.onStop()
+    }
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
+        RecyclerView(requireContext()).also { rv ->
+            rv.layoutManager = GridLayoutManager(context, 2).apply {
                 spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
                     override fun getSpanSize(position: Int): Int =
-                        if (flattened[position] is Profile) 2 else 1
+                        if (users!![position] is Profile) 2 else 1
                 }
             }
-            adapter = MatchesAdapter(flattened)
-            addItemDecoration(MatchDividerDecor(context))
+            rv.addItemDecoration(MatchDividerDecor(requireContext()))
+
+            val adapter = MatchesAdapter(users ?: emptyList())
+            this.adapter = adapter
+            rv.adapter = adapter
         }
+
+    override fun onDestroyView() {
+        adapter = null
+        super.onDestroyView()
+    }
 
     @SuppressLint("ResourceType")
     internal class MatchHolder(
@@ -132,8 +157,14 @@ class MatchesScreen : Fragment() {
     }
 
     private class MatchesAdapter(
-        private val items: List<Any> // = Profile | Contact
+        items: List<Any> // = Profile | Contact
     ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+
+        var items: List<Any> = items
+            set(value) {
+                field = value
+                notifyDataSetChanged()
+            }
 
         private val chipsPool = RecyclerView.RecycledViewPool()
 

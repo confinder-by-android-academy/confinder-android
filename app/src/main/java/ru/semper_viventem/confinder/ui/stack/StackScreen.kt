@@ -5,6 +5,7 @@ import android.content.res.Resources
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.PorterDuff
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -55,12 +56,14 @@ class StackScreen : Fragment() {
             currentRequest = SwipeListGateway.getSwipeList({ profiles ->
                 this.profiles = profiles
                 adapter?.items = profiles
+                currentRequest = null
 
                 if (profiles.isEmpty()) {
                     sendNavigationMessage(NavigationMessage.OpenMatchingScreen)
                 }
             }, { e ->
                 e.printStackTrace()
+                currentRequest = null
                 Toast.makeText(context, "Отстой.", Toast.LENGTH_SHORT).show()
             })
         }
@@ -81,19 +84,24 @@ class StackScreen : Fragment() {
             this.adapter = adapter
             it.adapter = adapter
             it.layoutManager = SwipeableLayoutManager()
-            ItemTouchHelper(TouchCallback(it, adapter, resources)).attachToRecyclerView(it)
+            ItemTouchHelper(TouchCallback(adapter, resources)).attachToRecyclerView(it)
         }
 
+    override fun onDestroyView() {
+        adapter = null
+        super.onDestroyView()
+    }
+
     private inner class TouchCallback(
-        view: View, adapter: CardAdapter, res: Resources
-    ) : SwipeableTouchHelperCallback(ItemSwipeCallback(view, adapter)) {
+        adapter: CardAdapter, res: Resources
+    ) : SwipeableTouchHelperCallback(ItemSwipeCallback(adapter)) {
         override fun getAllowedSwipeDirectionsMovementFlags(viewHolder: RecyclerView.ViewHolder): Int =
             ItemTouchHelper.RIGHT or ItemTouchHelper.LEFT
 
-        val like = res.getDrawable(R.drawable.ic_mood_black_24dp, null).mutate().also {
+        private val like: Drawable = res.getDrawable(R.drawable.ic_mood_black_24dp, null).mutate().also {
             it.setColorFilter(0xFF_33EE55.toInt(), PorterDuff.Mode.SRC_ATOP)
         }
-        val dislike = res.getDrawable(R.drawable.ic_mood_bad_black_24dp, null).mutate().also {
+        private val dislike: Drawable = res.getDrawable(R.drawable.ic_mood_bad_black_24dp, null).mutate().also {
             it.setColorFilter(0xFF_EE5533.toInt(), PorterDuff.Mode.SRC_ATOP)
         }
         override fun onChildDrawOver(
@@ -117,7 +125,6 @@ class StackScreen : Fragment() {
     }
 
     private inner class ItemSwipeCallback(
-        private val view: View,
         private val adapter: CardAdapter
     ) : OnItemSwiped {
         override fun onItemSwiped() {
@@ -138,11 +145,6 @@ class StackScreen : Fragment() {
                 SwipeListGateway.like(adapter.items[0].id)
             }
         }
-    }
-
-    override fun onDestroyView() {
-        adapter = null
-        super.onDestroyView()
     }
 
     private class CardHolder(
