@@ -55,6 +55,10 @@ class StackScreen : Fragment() {
             currentRequest = SwipeListGateway.getSwipeList({ profiles ->
                 this.profiles = profiles
                 adapter?.items = profiles
+
+                if (profiles.isEmpty()) {
+                    sendNavigationMessage(NavigationMessage.OpenMatchingScreen)
+                }
             }, { e ->
                 e.printStackTrace()
                 Toast.makeText(context, "Отстой.", Toast.LENGTH_SHORT).show()
