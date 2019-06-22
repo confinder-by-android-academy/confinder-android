@@ -66,12 +66,13 @@ class StackScreen : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
         RecyclerView(requireActivity()).also {
-            adapter = CardAdapter(profiles ?: emptyList())
+            val adapter = CardAdapter(profiles ?: emptyList())
+            this.adapter = adapter
             it.adapter = adapter
             it.layoutManager = SwipeableLayoutManager()
             ItemTouchHelper(object : SwipeableTouchHelperCallback(object : OnItemSwiped {
                 override fun onItemSwiped() {
-                    adapter!!.removeTopItem()
+                    adapter.removeTopItem()
                 }
                 override fun onItemSwipedRight() = Unit
                 override fun onItemSwipedDown() = Unit
