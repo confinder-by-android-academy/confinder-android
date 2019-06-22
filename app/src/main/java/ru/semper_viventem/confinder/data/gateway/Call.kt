@@ -5,8 +5,8 @@ import retrofit2.Callback
 import retrofit2.Response
 import ru.semper_viventem.confinder.data.network.NetworkError
 
-inline fun <T> Call<T>.execute(crossinline onSuccess: (T) -> Unit, crossinline onError: (e: Throwable) -> Unit) {
-    this.enqueue(
+inline fun <T> Call<T>.execute(crossinline onSuccess: (T) -> Unit, crossinline onError: (e: Throwable) -> Unit): Call<T> = apply {
+    enqueue(
         object : Callback<T> {
 
             override fun onResponse(call: Call<T>, response: Response<T>) {

@@ -1,5 +1,6 @@
 package ru.semper_viventem.confinder.data.gateway
 
+import retrofit2.Call
 import ru.semper_viventem.confinder.data.Profile
 import ru.semper_viventem.confinder.data.network.api
 
@@ -13,14 +14,14 @@ object SwipeListGateway {
     fun getSwipeList(
         onSuccess: (profiles: List<Profile>) -> Unit,
         onError: (e: Throwable) -> Unit
-    ) {
+    ): Call<*>? {
 
         if (token == null) {
             onError.invoke(IllegalStateException("User is not authorized"))
-            return
+            return null
         }
 
-        api.getSwipeList(token!!, DEFAULT_CONFERENCE_ID).execute(onSuccess, onError)
+        return api.getSwipeList(token!!, DEFAULT_CONFERENCE_ID).execute(onSuccess, onError)
     }
 
     fun like(

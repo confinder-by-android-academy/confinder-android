@@ -1,22 +1,25 @@
 package ru.semper_viventem.confinder.ui.stack
 
 import android.content.Context
-import android.graphics.*
-import android.graphics.drawable.Drawable
+import android.graphics.Color
 import android.os.Bundle
-import android.text.TextPaint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.cardview.widget.CardView
 import androidx.core.view.setMargins
 import androidx.core.view.setPadding
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.flexbox.FlexboxLayoutManager
+import com.squareup.picasso.Picasso
+import retrofit2.Call
+import ru.semper_viventem.confinder.data.Profile
+import ru.semper_viventem.confinder.data.gateway.SwipeListGateway
 import ru.semper_viventem.confinder.dp
 import ru.semper_viventem.confinder.ui.*
 import ru.semper_viventem.confinder.ui.chips.ChipsAdapter
@@ -24,32 +27,51 @@ import swipeable.com.layoutmanager.OnItemSwiped
 import swipeable.com.layoutmanager.SwipeableLayoutManager
 import swipeable.com.layoutmanager.SwipeableTouchHelperCallback
 import swipeable.com.layoutmanager.touchelper.ItemTouchHelper
-import java.util.*
 import kotlin.math.max
 import kotlin.math.min
 
 
 class StackScreen : Fragment() {
 
-    private companion object {
-        private val colours = arrayOf(Color.BLACK, Color.RED, Color.GREEN, Color.BLUE, Color.CYAN, Color.MAGENTA, Color.YELLOW, Color.GRAY)
-        private val repository = Random()
+    private var profiles: List<Profile>? = null
+    private var adapter: CardAdapter? = null
+    private var currentRequest: Call<*>? = null
 
-        fun nextColour() = colours[repository.nextInt(colours.size)]
-        fun nextName() = repository.nextLong().toString(36)
-        fun nextInterests() = List(repository.nextInt(20)) {
-            repository.nextLong().toString(36)
+    init {
+        retainInstance = true
+    }
+
+    override fun onStart() {
+        super.onStart()
+
+        if (profiles == null) {
+            currentRequest = SwipeListGateway.getSwipeList({ profiles ->
+                this.profiles = profiles
+                adapter?.items = profiles
+            }, { e ->
+                e.printStackTrace()
+                Toast.makeText(context, "Отстой.", Toast.LENGTH_SHORT).show()
+            })
         }
+    }
+
+    override fun onStop() {
+        currentRequest?.let {
+            it.cancel()
+            currentRequest = null
+        }
+
+        super.onStop()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
         RecyclerView(requireActivity()).also {
-            val adapter = CardAdapter()
+            adapter = CardAdapter(profiles ?: emptyList())
             it.adapter = adapter
             it.layoutManager = SwipeableLayoutManager()
             ItemTouchHelper(object : SwipeableTouchHelperCallback(object : OnItemSwiped {
                 override fun onItemSwiped() {
-                    adapter.removeTopItem()
+                    adapter!!.removeTopItem()
                 }
                 override fun onItemSwipedRight() = Unit
                 override fun onItemSwipedDown() = Unit
@@ -60,6 +82,11 @@ class StackScreen : Fragment() {
                     ItemTouchHelper.RIGHT or ItemTouchHelper.LEFT
             }).attachToRecyclerView(it)
         }
+
+    override fun onDestroyView() {
+        adapter = null
+        super.onDestroyView()
+    }
 
     private class CardHolder(
         context: Context, chipsPool: RecyclerView.RecycledViewPool
@@ -96,57 +123,41 @@ class StackScreen : Fragment() {
             }
         } }
 
-        fun bind() {
-            val name = nextName()
-            photoView.setImageDrawable(object : Drawable() {
-                private val col0 = nextColour()
-                private val col1 = nextColour()
-                val fillPaint = TextPaint(Paint.ANTI_ALIAS_FLAG).apply {
-                    textSize = dp(36f)
-                }
-                val strokePaint = TextPaint(Paint.ANTI_ALIAS_FLAG).apply {
-                    textSize = fillPaint.textSize
-                    style = Paint.Style.STROKE
-                    strokeWidth = dp(2f)
-                    color = nextColour()
-                }
-                override fun draw(canvas: Canvas) {
-                    canvas.drawColor(nextColour())
-                    canvas.drawText("Йа $name", 10f, 100f, fillPaint)
-                    canvas.drawText("Йа $name", 10f, 100f, strokePaint)
-                }
-                override fun setAlpha(alpha: Int) = Unit
-                override fun getOpacity(): Int = PixelFormat.TRANSLUCENT
-                override fun setColorFilter(colorFilter: ColorFilter?) = Unit
-                override fun onBoundsChange(bounds: Rect) {
-                    fillPaint.shader = LinearGradient(0f, 0f, bounds.width().toFloat(), dp(36f), col0, col1, Shader.TileMode.CLAMP)
-                }
-            })
-            nameView.text = name
-            interestsView.swapAdapter(ChipsAdapter(nextInterests(), canRemove = false), true)
+        fun bind(profile: Profile) {
+            Picasso.get().load(profile.photo).into(photoView)
+            nameView.text = "%s %s".format(profile.firstName, profile.lastName)
+            interestsView.swapAdapter(ChipsAdapter(profile.tags, canRemove = false), true)
         }
     }
 
-    private class CardAdapter : RecyclerView.Adapter<CardHolder>() {
+    private class CardAdapter(
+        profiles: List<Profile>
+    ) : RecyclerView.Adapter<CardHolder>() {
 
-        private var items = 10
+        var items = profiles
+            set(value) {
+                field = value
+                notifyDataSetChanged()
+            }
+
         val chipsPool = RecyclerView.RecycledViewPool()
 
         override fun getItemCount(): Int =
-            items
+            items.size
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CardHolder =
             CardHolder(parent.context, chipsPool)
 
         override fun onBindViewHolder(holder: CardHolder, position: Int) {
-            holder.bind()
+            holder.bind(items[position])
         }
 
         fun removeTopItem() {
-            if (items > 0) {
+            TODO()
+            /*if (items > 0) {
                 items--
                 notifyItemRemoved(0)
-            }
+            }*/
         }
 
     }
