@@ -83,5 +83,6 @@ class AuthScreen : XmlScreen() {
 
     private fun showProgress(show: Boolean) {
         progress.visible(show)
+        signIn.isEnabled = !show
     }
 }
