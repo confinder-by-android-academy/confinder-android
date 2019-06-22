@@ -40,4 +40,8 @@ interface Api {
 
     @POST("dislike/{userId}")
     fun dislike(@Header("API-KEY") token: String, @Path("userId") userId: String): Call<Unit>
+
+    @GET("matches")
+    fun matches(@Header("API-KEY") token: String): Call<List<Profile>>
+
 }
